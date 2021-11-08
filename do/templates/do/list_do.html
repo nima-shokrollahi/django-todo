@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}
+    List Doing
+{% endblock %}
+{% block content %}
+    <div class='list-container'>
+        {% if todo_list_len == 0 %}
+            <div>
+                <h3>nothing here ...</h3>
+                <a class='link' href="{% url 'add_do' %}">you can add a job to do from here</a>
+            </div>
+        {% else %}
+            <div class="todo-list-container">
+                <form method="POST" action="{% url 'list_do' %}" id='todo-list-form'>
+                    {% csrf_token %}
+                    <div class="todo-list">
+                        <ul class="list-group">
+                            {% for item in data %}
+                                <li class="list-group-item todo-item">
+                                    <div class="todo-item-content">
+                                        <input class="check-input form-check-input {% if item.checked %}job-done-input{% endif %}"
+                                               {% if item.checked %}checked{% endif %} type="checkbox"
+                                               name='checked' value="{{ item.id }}" aria-label="...">
+                                        <div class="{% if item.checked %}job-done-text{% endif %} job-text">
+                                            <h6>{{ item.title }}</h6>
+                                            <p>{{ item.date }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="todo-item-action">
+                                        <a class='btn btn-danger'
+                                           href="{% url 'dell_do' item.id %}">Delete</a>
+                                        <a class='btn btn-secondary'
+                                           href="{% url 'dell_do' item.id %}">Edit</a>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            <a class='btn btn-light' href="{% url 'add_do' %}"> Add New Work</a>
+                        </ul>
+                    </div>
+
+                    <button class='btn btn-primary' id='print-paper'>print</button>
+                </form>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        let check_input = document.getElementsByName('checked');
+        let form = document.getElementById('todo-list-form')
+        let print_btn = document.getElementById('print-paper')
+        console.log(check_input);
+        check_input.forEach(element => {
+            element.addEventListener('click', function () {
+                form.submit()
+            })
+        });
+        print_btn.addEventListener('click', function () {
+            print()
+        })
+
+    </script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+{#<h1>List Of Do</h1>#}
+{#<form method="POST">#}
+{#    {% csrf_token %}#}
+{#    {% for  %}#}
+{#        <div class="list-group">#}
+{##}
+{#            <label class="list-group-item">#}
+{#                <input class="form-check-input me-1" {% if item.checked %}checked{% endif %} type="checkbox"#}
+{#                       name="checked" value="{{ item.id }}">#}
+{#                {{ item.title }}#}
+{#                <a href="{% url 'dell_do' item.id %}">delete</a>#}
+{#            </label>#}
+{##}
+{#        </div>#}
+{#    {% endfor %}#}
+{#    <button type="submit" class="btn btn-success">submit</button>#}
+{#</form>#}
+{#<a href="/">#}
+{#    <button href="{% url 'home' %}" type="button" class="btn btn-success mt-3">Back</button>#}
+{#</a>#}
+{#</div>#}
